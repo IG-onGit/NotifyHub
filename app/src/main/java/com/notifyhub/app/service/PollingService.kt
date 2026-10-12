@@ -3,6 +3,7 @@ package com.notifyhub.app.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.os.PowerManager
 import android.util.Log
 import com.notifyhub.app.NotifyHubApp
 import com.notifyhub.app.notification.NotificationHelper
@@ -26,9 +27,17 @@ class PollingService : Service() {
     private val scope = CoroutineScope(job)
     private var loopJob: Job? = null
 
+    private var wakeLock: PowerManager.WakeLock? = null
+
     override fun onCreate() {
         super.onCreate()
         NotificationHelper.ensureChannels(applicationContext)
+        // Keep the CPU awake while the screen is off so the polling loop keeps running.
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "NotifyHub:polling").apply {
+            setReferenceCounted(false)
+            acquire()
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -75,6 +84,8 @@ class PollingService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         job.cancel()
+        wakeLock?.let { if (it.isHeld) it.release() }
+        wakeLock = null
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

@@ -81,6 +81,8 @@ object NotificationHelper {
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
         // Replace the app label ("NotifyHub") in the notification header with the project name.
         project?.let {

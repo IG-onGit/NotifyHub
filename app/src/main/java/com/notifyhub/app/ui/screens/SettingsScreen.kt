@@ -90,6 +90,45 @@ fun SettingsScreen() {
                 }
             }
 
+            Spacer(Modifier.height(16.dp))
+            val powerManager = context.getSystemService(android.content.Context.POWER_SERVICE) as android.os.PowerManager
+            var unrestricted by remember {
+                mutableStateOf(powerManager.isIgnoringBatteryOptimizations(context.packageName))
+            }
+            val lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+            androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+                val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+                    if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                        unrestricted = powerManager.isIgnoringBatteryOptimizations(context.packageName)
+                    }
+                }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+            }
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp)) {
+                    Text("Battery optimization", style = MaterialTheme.typography.titleSmall)
+                    Text(
+                        if (unrestricted) "Unrestricted: notifications keep arriving with the screen off."
+                        else "Android may pause background sync when the screen is off. Allow NotifyHub to run unrestricted.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    if (!unrestricted) {
+                        Spacer(Modifier.height(8.dp))
+                        Button(onClick = {
+                            val intent = android.content.Intent(
+                                android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                                android.net.Uri.parse("package:${context.packageName}")
+                            )
+                            context.startActivity(intent)
+                        }) {
+                            Text("Allow background activity")
+                        }
+                    }
+                }
+            }
+
             Spacer(Modifier.height(20.dp))
             Button(
                 onClick = { persist() },
