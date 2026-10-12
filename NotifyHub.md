@@ -1,4 +1,4 @@
-# NotifyHub - Backend Setup Instructions
+# NotifyHub - Backend setup instructions for integrating NotifyHub as mobile notification receiver.
 
 NotifyHub is an Android app that **polls your server** and shows what it finds as system notifications. It never pushes to your server and talks to no third party. You need to set up:
 
