@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NotifyHub</string>
+    <string name="sync_channel_name">Sync Status</string>
+    <string name="sync_channel_desc">Shows that NotifyHub is actively checking for new notifications</string>
+    <string name="sync_notification_title">NotifyHub sync active</string>
+    <string name="sync_notification_text">Watching for notifications from your projects</string>
+</resources>
