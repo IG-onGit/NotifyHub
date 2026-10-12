@@ -9,14 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Holds connection settings: your server's base URL, the bearer token sent on
- * every request, and the polling interval. Backed by EncryptedSharedPreferences
- * so the token is encrypted at rest (and excluded from Android auto-backup, see
+ * Holds global settings (polling interval, background-sync switch) plus the
+ * per-project bearer tokens. Backed by EncryptedSharedPreferences so tokens are
+ * encrypted at rest (and excluded from Android auto-backup, see
  * backup_rules.xml / data_extraction_rules.xml).
  */
 data class ConnectionSettings(
-    val serverBaseUrl: String = "",
-    val apiToken: String = "",
     val pollIntervalSeconds: Int = 20,
     val serviceEnabled: Boolean = false
 )
@@ -40,16 +38,12 @@ class SettingsStore(context: Context) {
     val settings: StateFlow<ConnectionSettings> = _settings.asStateFlow()
 
     private fun load(): ConnectionSettings = ConnectionSettings(
-        serverBaseUrl = prefs.getString(KEY_URL, "") ?: "",
-        apiToken = prefs.getString(KEY_TOKEN, "") ?: "",
         pollIntervalSeconds = prefs.getInt(KEY_INTERVAL, 20),
         serviceEnabled = prefs.getBoolean(KEY_ENABLED, false)
     )
 
     fun update(settings: ConnectionSettings) {
         prefs.edit()
-            .putString(KEY_URL, settings.serverBaseUrl)
-            .putString(KEY_TOKEN, settings.apiToken)
             .putInt(KEY_INTERVAL, settings.pollIntervalSeconds)
             .putBoolean(KEY_ENABLED, settings.serviceEnabled)
             .apply()
@@ -62,11 +56,34 @@ class SettingsStore(context: Context) {
 
     fun current(): ConnectionSettings = _settings.value
 
+    fun getProjectToken(projectId: String): String =
+        prefs.getString(PROJECT_TOKEN_PREFIX + projectId, "") ?: ""
+
+    fun setProjectToken(projectId: String, token: String) {
+        prefs.edit().putString(PROJECT_TOKEN_PREFIX + projectId, token).apply()
+    }
+
+    fun removeProjectToken(projectId: String) {
+        prefs.edit().remove(PROJECT_TOKEN_PREFIX + projectId).apply()
+    }
+
+    /** Pre-per-project global server URL and token, or null once migrated / never set. */
+    fun legacyConnection(): Pair<String, String>? {
+        val url = prefs.getString(KEY_URL, "") ?: ""
+        if (url.isBlank()) return null
+        return url to (prefs.getString(KEY_TOKEN, "") ?: "")
+    }
+
+    fun clearLegacyConnection() {
+        prefs.edit().remove(KEY_URL).remove(KEY_TOKEN).apply()
+    }
+
     companion object {
         private const val KEY_URL = "server_base_url"
         private const val KEY_TOKEN = "api_token"
         private const val KEY_INTERVAL = "poll_interval_seconds"
         private const val KEY_ENABLED = "service_enabled"
+        private const val PROJECT_TOKEN_PREFIX = "project_token_"
 
         @Volatile
         private var INSTANCE: SettingsStore? = null

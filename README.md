@@ -30,7 +30,7 @@ milliseconds) of the newest notification the app has already stored - pass
 everything strictly newer than that. On first run, or after a full clear,
 `since` is `0`.
 
-**Request header** (if you set an API token in the app's Settings screen):
+**Request header** (if you set an API token on the project's registration page in the app):
 ```
 Authorization: Bearer <your-token>
 ```
@@ -136,12 +136,12 @@ build this, and it handles the Android SDK/Gradle setup for you.
    `adb push`, a cloud drive, or USB file transfer) and open it there to
    install. You'll need to allow "install from this source" when prompted.
 
-4. On first launch, grant the notification permission when asked, then go
-   to **Settings** in the app and fill in your server's base URL and
-   (optionally) your API token, then toggle **Background sync** on.
+4. On first launch, grant the notification permission when asked.
 5. Go to **Projects** and register your first piece of software (name,
-   project key, icon, color) - the key must match what your server tags
-   notifications with.
+   project key, server base URL, optional API token, icon, color) - the key
+   must match what your server tags notifications with. Each project has its
+   own server URL and token.
+6. Go to **Settings** and toggle **Background sync** on.
 
 ### Note on the Gradle wrapper
 

@@ -49,10 +49,16 @@ class PollingService : Service() {
                     return@launch
                 }
                 try {
-                    val newItems = app.repository.pollOnce(settings.serverBaseUrl, settings.apiToken)
-                    for (item in newItems) {
-                        val project = app.repository.getProjectByKey(item.projectKey)
-                        NotificationHelper.postProjectNotification(applicationContext, project, item)
+                    for (project in app.repository.getAllProjects()) {
+                        if (project.baseUrl.isBlank()) continue
+                        try {
+                            val newItems = app.repository.pollOnce(project)
+                            for (item in newItems) {
+                                NotificationHelper.postProjectNotification(applicationContext, project, item)
+                            }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Poll failed for ${project.projectKey}: ${e.message}")
+                        }
                     }
                     // Keep local history from growing unbounded.
                     app.repository.pruneOlderThanDays(30)

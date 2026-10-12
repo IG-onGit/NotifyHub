@@ -10,13 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -38,14 +36,10 @@ fun SettingsScreen() {
     val app = context.applicationContext as NotifyHubApp
     val persisted by app.settingsStore.settings.collectAsState()
 
-    var serverUrl by remember { mutableStateOf(persisted.serverBaseUrl) }
-    var apiToken by remember { mutableStateOf(persisted.apiToken) }
     var intervalSeconds by remember { mutableStateOf(persisted.pollIntervalSeconds.toFloat()) }
     var serviceEnabled by remember { mutableStateOf(persisted.serviceEnabled) }
 
     LaunchedEffect(persisted) {
-        serverUrl = persisted.serverBaseUrl
-        apiToken = persisted.apiToken
         intervalSeconds = persisted.pollIntervalSeconds.toFloat()
         serviceEnabled = persisted.serviceEnabled
     }
@@ -53,8 +47,6 @@ fun SettingsScreen() {
     fun persist(newServiceEnabled: Boolean = serviceEnabled) {
         app.settingsStore.update(
             ConnectionSettings(
-                serverBaseUrl = serverUrl.trim(),
-                apiToken = apiToken.trim(),
                 pollIntervalSeconds = intervalSeconds.toInt(),
                 serviceEnabled = newServiceEnabled
             )
@@ -66,24 +58,6 @@ fun SettingsScreen() {
         Column(
             modifier = Modifier.fillMaxSize().padding(padding).padding(20.dp)
         ) {
-            OutlinedTextField(
-                value = serverUrl,
-                onValueChange = { serverUrl = it },
-                label = { Text("Server base URL") },
-                placeholder = { Text("https://your-server.example.com") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(Modifier.height(12.dp))
-            OutlinedTextField(
-                value = apiToken,
-                onValueChange = { apiToken = it },
-                label = { Text("API token") },
-                visualTransformation = PasswordVisualTransformation(),
-                supportingText = { Text("Sent as 'Authorization: Bearer <token>' on every request") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(Modifier.height(20.dp))
             Text("Poll interval: ${intervalSeconds.toInt()}s", style = MaterialTheme.typography.titleSmall)
             Slider(
                 value = intervalSeconds,
@@ -101,7 +75,7 @@ fun SettingsScreen() {
                     Column(Modifier.weight(1f)) {
                         Text("Background sync", style = MaterialTheme.typography.titleSmall)
                         Text(
-                            "Runs a foreground service that polls your server and posts notifications",
+                            "Runs a foreground service that polls each project's server and posts notifications",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -119,7 +93,6 @@ fun SettingsScreen() {
             Spacer(Modifier.height(20.dp))
             Button(
                 onClick = { persist() },
-                enabled = serverUrl.isNotBlank(),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Save settings")

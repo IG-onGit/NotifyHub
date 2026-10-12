@@ -18,6 +18,9 @@ interface NotificationDao {
     @Query("SELECT MAX(timestampMillis) FROM notifications")
     suspend fun getLatestTimestamp(): Long?
 
+    @Query("SELECT MAX(timestampMillis) FROM notifications WHERE projectKey = :projectKey")
+    suspend fun getLatestTimestampForProject(projectKey: String): Long?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(items: List<NotificationItem>): List<Long>
 

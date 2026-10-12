@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.notifyhub.app.NotifyHubApp
 import com.notifyhub.app.data.Project
@@ -67,6 +68,8 @@ fun AddEditProjectScreen(projectId: String?, onDone: () -> Unit) {
     var selectedIconKey by remember { mutableStateOf(IconCatalog.default.key) }
     var selectedColor by remember { mutableStateOf(presetColors.first()) }
     var keyManuallyEdited by remember { mutableStateOf(false) }
+    var baseUrl by remember { mutableStateOf("") }
+    var apiToken by remember { mutableStateOf("") }
 
     LaunchedEffect(projectId) {
         if (projectId != null) {
@@ -78,6 +81,8 @@ fun AddEditProjectScreen(projectId: String?, onDone: () -> Unit) {
                 selectedIconKey = project.iconKey
                 selectedColor = project.colorHex
                 keyManuallyEdited = true
+                baseUrl = project.baseUrl
+                apiToken = app.repository.getProjectToken(project.id)
             }
         }
     }
@@ -113,6 +118,24 @@ fun AddEditProjectScreen(projectId: String?, onDone: () -> Unit) {
                 },
                 label = { Text("Project key (sent by your server)") },
                 supportingText = { Text("Your backend must tag each notification with this exact key") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(Modifier.height(12.dp))
+            OutlinedTextField(
+                value = baseUrl,
+                onValueChange = { baseUrl = it },
+                label = { Text("Server base URL") },
+                placeholder = { Text("https://your-server.example.com") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(12.dp))
+            OutlinedTextField(
+                value = apiToken,
+                onValueChange = { apiToken = it },
+                label = { Text("API token") },
+                visualTransformation = PasswordVisualTransformation(),
+                supportingText = { Text("Sent as 'Authorization: Bearer <token>' on every request (optional)") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -186,10 +209,12 @@ fun AddEditProjectScreen(projectId: String?, onDone: () -> Unit) {
                         name = name.trim(),
                         iconKey = selectedIconKey,
                         colorHex = selectedColor,
+                        baseUrl = baseUrl.trim(),
                         createdAtMillis = existing?.createdAtMillis ?: System.currentTimeMillis()
                     )
                     scope.launch {
                         app.repository.upsertProject(toSave)
+                        app.repository.setProjectToken(toSave.id, apiToken.trim())
                         onDone()
                     }
                 },
