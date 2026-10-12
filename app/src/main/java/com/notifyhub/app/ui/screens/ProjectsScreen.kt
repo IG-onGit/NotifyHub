@@ -16,7 +16,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,6 +55,7 @@ fun ProjectsScreen(
     val app = context.applicationContext as NotifyHubApp
     val scope = rememberCoroutineScope()
     val projects by app.repository.observeProjects().collectAsState(initial = emptyList())
+    var projectToDelete by remember { mutableStateOf<Project?>(null) }
 
     Scaffold(
         floatingActionButton = {
@@ -80,11 +86,28 @@ fun ProjectsScreen(
                     ProjectRow(
                         project = project,
                         onClick = { onEditProject(project.id) },
-                        onDelete = { scope.launch { app.repository.deleteProject(project) } }
+                        onDelete = { projectToDelete = project }
                     )
                 }
             }
         }
+    }
+
+    projectToDelete?.let { project ->
+        AlertDialog(
+            onDismissRequest = { projectToDelete = null },
+            title = { Text("Delete project?") },
+            text = { Text("\"${project.name}\" will be removed. This cannot be undone.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    projectToDelete = null
+                    scope.launch { app.repository.deleteProject(project) }
+                }) { Text("Delete") }
+            },
+            dismissButton = {
+                TextButton(onClick = { projectToDelete = null }) { Text("Cancel") }
+            }
+        )
     }
 }
 
