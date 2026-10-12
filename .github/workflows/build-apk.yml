@@ -36,11 +36,10 @@ jobs:
 
       - name: Commit APK
         run: |
-          mkdir -p apk
-          cp app/build/outputs/apk/debug/app-debug.apk apk/NotifyHub.apk
+          cp app/build/outputs/apk/debug/app-debug.apk NotifyHub.apk
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f apk/NotifyHub.apk
+          git add -f NotifyHub.apk
           if git diff --cached --quiet; then
             echo "APK unchanged, nothing to commit."
             exit 0

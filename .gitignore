@@ -26,4 +26,4 @@ Thumbs.db
 .kotlin/
 
 # ...except the APK published by the build workflow
-!apk/NotifyHub.apk
+!/NotifyHub.apk
