@@ -3,6 +3,8 @@ name: Build APK
 on:
   push:
     branches: [main]
+  # Manual run from the Actions tab ("Run workflow" button).
+  workflow_dispatch:
 
 # Needed so the job can commit the APK back to the repo.
 permissions:
@@ -14,9 +16,10 @@ concurrency:
 
 jobs:
   build:
-    # Only run when the pushed head commit message contains "[deploy]".
+    # Push: only when the head commit message contains "[deploy]".
+    # Manual runs always build.
     # The bot's own "Update [...]" commit doesn't contain it, so no loop.
-    if: contains(github.event.head_commit.message, '[deploy]')
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[deploy]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
