@@ -82,7 +82,12 @@ object NotificationHelper {
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-        project?.let { builder.setSubText(it.name) }
+        // Replace the app label ("NotifyHub") in the notification header with the project name.
+        project?.let {
+            builder.addExtras(android.os.Bundle().apply {
+                putString("android.substName", it.name)
+            })
+        }
 
         val manager = androidx.core.app.NotificationManagerCompat.from(context)
         if (androidx.core.content.ContextCompat.checkSelfPermission(
