@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1031" height="874" viewBox="0 0 1031 874">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a0810"/>
+      <stop offset="1" stop-color="#241a46"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#8f75ea" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#8f75ea" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lg" x1="12" y1="6" x2="96" y2="102" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9b82f0"/>
+      <stop offset="1" stop-color="#4b3592"/>
+    </linearGradient>
+    <filter id="sh" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M1,1 L9,5 L1,9" fill="none" stroke="#cdbcff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <rect width="1031" height="874" fill="url(#bg)"/>
+  <circle cx="515" cy="150" r="230" fill="url(#glow)"/>
+
+  <!-- header: logo, name, slogan -->
+  <g transform="translate(445 40) scale(1.3)" filter="url(#sh)">
+    <circle cx="54" cy="54" r="54" fill="url(#lg)"/>
+    <path fill="#fff" d="M54,26c-10.5,0 -19,8.5 -19,19v11.4c0,2.5 -1,4.8 -2.7,6.6L28,67.6h52l-4.3,-4.6c-1.7,-1.8 -2.7,-4.1 -2.7,-6.6V45C73,34.5 64.5,26 54,26z"/>
+    <path fill="#fff" d="M46,72c0,4.4 3.6,8 8,8c4.4,0 8,-3.6 8,-8z"/>
+    <circle cx="77" cy="32" r="9.5" fill="#34d399" stroke="#4b3592" stroke-width="4"/>
+  </g>
+  <text x="515" y="238" text-anchor="middle" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="68" font-weight="600" fill="#f4f0ff" letter-spacing="-1">Notify<tspan fill="#cdbcff">Hub</tspan></text>
+  <text x="515" y="288" text-anchor="middle" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="27" fill="#b9b2d3">Your server's alerts, as <tspan fill="#34d399" font-weight="600">native Android notifications</tspan></text>
+
+  <!-- flow diagram -->
+  <!-- card 1: your software -->
+  <g filter="url(#sh)">
+    <rect x="50" y="350" width="210" height="190" rx="26" fill="#f3efff"/>
+  </g>
+  <rect x="88" y="378" width="134" height="92" rx="12" fill="#1a1428"/>
+  <circle cx="102" cy="392" r="4" fill="#ff5f57"/><circle cx="116" cy="392" r="4" fill="#febc2e"/><circle cx="130" cy="392" r="4" fill="#28c840"/>
+  <text x="100" y="440" font-family="Consolas,'Courier New',monospace" font-size="26" font-weight="700" fill="#34d399">&gt;_</text>
+  <rect x="146" y="428" width="60" height="6" rx="3" fill="#8f75ea"/>
+  <rect x="146" y="442" width="40" height="6" rx="3" fill="#5b4a99"/>
+  <text x="155" y="510" text-anchor="middle" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="22" font-weight="600" fill="#3a2d6b">Your software</text>
+
+  <!-- card 2: your server -->
+  <g filter="url(#sh)">
+    <rect x="410" y="350" width="210" height="190" rx="26" fill="#f3efff"/>
+  </g>
+  <rect x="468" y="378" width="94" height="40" rx="10" fill="#6750a4"/>
+  <rect x="468" y="426" width="94" height="40" rx="10" fill="#6750a4"/>
+  <circle cx="484" cy="398" r="5" fill="#34d399"/><rect x="498" y="395" width="48" height="6" rx="3" fill="#cdbcff"/>
+  <circle cx="484" cy="446" r="5" fill="#34d399"/><rect x="498" y="443" width="48" height="6" rx="3" fill="#cdbcff"/>
+  <text x="515" y="510" text-anchor="middle" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="22" font-weight="600" fill="#3a2d6b">Your server</text>
+
+  <!-- card 3: phone -->
+  <g filter="url(#sh)">
+    <rect x="770" y="350" width="210" height="190" rx="26" fill="#f3efff"/>
+  </g>
+  <rect x="842" y="366" width="66" height="104" rx="12" fill="#1a1428"/>
+  <rect x="848" y="378" width="54" height="26" rx="6" fill="#ffffff"/>
+  <circle cx="859" cy="391" r="6" fill="#2e7d32"/>
+  <rect x="868" y="385" width="28" height="4" rx="2" fill="#6750a4"/><rect x="868" y="393" width="20" height="4" rx="2" fill="#a99ad6"/>
+  <rect x="848" y="410" width="54" height="26" rx="6" fill="#ffffff" fill-opacity="0.85"/>
+  <circle cx="859" cy="423" r="6" fill="#ef6c00"/>
+  <rect x="868" y="417" width="28" height="4" rx="2" fill="#6750a4"/><rect x="868" y="425" width="20" height="4" rx="2" fill="#a99ad6"/>
+  <text x="875" y="510" text-anchor="middle" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="22" font-weight="600" fill="#3a2d6b">NotifyHub app</text>
+
+  <!-- arrows -->
+  <line x1="268" y1="445" x2="400" y2="445" stroke="#cdbcff" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)"/>
+  <rect x="294" y="400" width="80" height="34" rx="17" fill="#2b2250" stroke="#8f75ea" stroke-opacity="0.7"/>
+  <text x="334" y="423" text-anchor="middle" font-family="Consolas,'Courier New',monospace" font-size="18" font-weight="700" fill="#e6e0f7">POST</text>
+  <line x1="760" y1="445" x2="630" y2="445" stroke="#cdbcff" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)"/>
+  <rect x="655" y="400" width="80" height="34" rx="17" fill="#2b2250" stroke="#8f75ea" stroke-opacity="0.7"/>
+  <text x="695" y="423" text-anchor="middle" font-family="Consolas,'Courier New',monospace" font-size="18" font-weight="700" fill="#e6e0f7">GET</text>
+  <text x="695" y="470" text-anchor="middle" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="17" fill="#b9b2d3">polls every 20 s</text>
+
+  <!-- terminal commands -->
+  <rect x="50" y="620" width="930" height="200" rx="20" fill="#090710" stroke="#ffffff" stroke-opacity="0.12"/>
+  <text x="84" y="692" font-family="Consolas,'Courier New',monospace" font-size="26" fill="#e6e0f7"><tspan fill="#34d399" font-weight="700">&gt;</tspan> curl -X POST your-server.dev/api/notifications</text>
+  <text x="84" y="754" font-family="Consolas,'Courier New',monospace" font-size="26" fill="#e6e0f7"><tspan fill="#34d399" font-weight="700">&gt;</tspan> GET /api/notifications?since=0</text>
+
+  <!-- MIT ribbon, top-left -->
+  <polygon points="0,130 130,0 226,0 0,226" fill="#2e7d32"/>
+  <text transform="translate(89 89) rotate(-45)" text-anchor="middle" dominant-baseline="central" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="38" font-weight="700" fill="#fff" letter-spacing="3">MIT</text>
+</svg>

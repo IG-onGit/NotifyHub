@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a0810"/>
+      <stop offset="1" stop-color="#241a46"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#8f75ea" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#8f75ea" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lg" x1="12" y1="6" x2="96" y2="102" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9b82f0"/>
+      <stop offset="1" stop-color="#4b3592"/>
+    </linearGradient>
+    <filter id="sh" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <circle cx="640" cy="215" r="260" fill="url(#glow)"/>
+
+  <!-- logo -->
+  <g transform="translate(540 105) scale(1.85)" filter="url(#sh)">
+    <circle cx="54" cy="54" r="54" fill="url(#lg)"/>
+    <path fill="#fff" d="M54,26c-10.5,0 -19,8.5 -19,19v11.4c0,2.5 -1,4.8 -2.7,6.6L28,67.6h52l-4.3,-4.6c-1.7,-1.8 -2.7,-4.1 -2.7,-6.6V45C73,34.5 64.5,26 54,26z"/>
+    <path fill="#fff" d="M46,72c0,4.4 3.6,8 8,8c4.4,0 8,-3.6 8,-8z"/>
+    <circle cx="77" cy="32" r="9.5" fill="#34d399" stroke="#4b3592" stroke-width="4"/>
+  </g>
+
+  <text x="640" y="418" text-anchor="middle" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="84" font-weight="600" fill="#f4f0ff" letter-spacing="-1.5">Notify<tspan fill="#cdbcff">Hub</tspan></text>
+  <text x="640" y="486" text-anchor="middle" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="35" fill="#b9b2d3">Your server's alerts, as <tspan fill="#34d399" font-weight="600">native Android notifications</tspan></text>
+
+  <!-- top-right pill -->
+  <g>
+    <rect x="940" y="38" width="300" height="48" rx="24" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.18"/>
+    <circle cx="968" cy="62" r="6" fill="#34d399"/>
+    <text x="990" y="70" text-anchor="start" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="22" fill="#e6e0f7">Self-hosted · No Firebase</text>
+  </g>
+
+  <!-- MIT ribbon, top-left -->
+  <polygon points="0,150 150,0 262,0 0,262" fill="#2e7d32"/>
+  <text transform="translate(103 103) rotate(-45)" text-anchor="middle" dominant-baseline="central" font-family="'Segoe UI','Inter',Arial,sans-serif" font-size="44" font-weight="700" fill="#fff" letter-spacing="3">MIT</text>
+</svg>

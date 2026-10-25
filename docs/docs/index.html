@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NotifyHub Documentation: Setup, API Contract and Security</title>
+<meta name="description" content="Install NotifyHub, register projects and implement the one GET endpoint your server needs. Covers configuration, the API contract, security and requirements.">
+<meta name="keywords" content="notifyhub documentation, android notification app, self-hosted notifications, api contract, polling api, bearer token, installation guide, android 8.0, kotlin, open source">
+<meta name="author" content="Irakli Gzirishvili">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#0d0b14">
+<link rel="canonical" href="https://ig-ongit.github.io/NotifyHub/docs/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NotifyHub">
+<meta property="og:title" content="NotifyHub Documentation: Setup, API Contract and Security">
+<meta property="og:description" content="Install NotifyHub, register projects and implement the one GET endpoint your server needs. Covers configuration, the API contract, security and requirements.">
+<meta property="og:url" content="https://ig-ongit.github.io/NotifyHub/docs/">
+<meta property="og:image" content="https://ig-ongit.github.io/NotifyHub/assets/github.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="NotifyHub: Your server's alerts, as native Android notifications">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NotifyHub Documentation: Setup, API Contract and Security">
+<meta name="twitter:description" content="Install NotifyHub, register projects and implement the one GET endpoint your server needs. Covers configuration, the API contract, security and requirements.">
+<meta name="twitter:image" content="https://ig-ongit.github.io/NotifyHub/assets/github.png">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "NotifyHub Documentation",
+  "description": "Install NotifyHub, register projects and implement the one GET endpoint your server needs. Covers configuration, the API contract, security and requirements.",
+  "url": "https://ig-ongit.github.io/NotifyHub/docs/",
+  "image": "https://ig-ongit.github.io/NotifyHub/assets/github.png",
+  "inLanguage": "en",
+  "author": {
+    "@type": "Person",
+    "name": "Irakli Gzirishvili",
+    "jobTitle": "Full-Stack Software Engineer",
+    "url": "https://github.com/IG-onGit",
+    "sameAs": [
+      "https://github.com/IG-onGit",
+      "https://www.linkedin.com/in/ig-link",
+      "https://x.com/IG_onX"
+    ]
+  }
+}
+</script>
+</head>
+<body class="docs-page">
+<a class="skip" href="#main">Skip to content</a>
+<svg xmlns="http://www.w3.org/2000/svg" class="sprite" style="display:none" aria-hidden="true"><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol><symbol id="i-server" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 6h.01M6 18h.01"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.65 0-.43-.17-.82-.45-1.1-.27-.29-.43-.67-.43-1.1 0-.9.75-1.65 1.65-1.65H16c3.31 0 6-2.69 6-6 0-4.96-4.49-9-10-9z"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol><symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol><symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol><symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol><symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></symbol><symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/><path d="M7 21h10M12 3v18M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol><symbol id="i-cpu" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol><symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/></symbol><symbol id="i-plug" viewBox="0 0 24 24"><path d="M12 22v-5M9 8V2M15 8V2M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></symbol><symbol id="i-terminal" viewBox="0 0 24 24"><path d="m4 17 6-6-6-6M12 19h8"/></symbol><symbol id="i-twitter-x" viewBox="0 0 24 24"><path d="M4 4l11.7 16H20L8.3 4z"/><path d="M4 20l6.8-6.8M13.2 10.8 20 4"/></symbol><symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></symbol><symbol id="i-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4M12 17h.01"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol><symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><path d="m2 2 20 20M14.12 14.12a3 3 0 1 1-4.24-4.24"/></symbol></svg>
+<header class="site-header">
+<div class="container header-in">
+<a class="brand" href="../" aria-label="NotifyHub home"><img src="../assets/logo.svg" width="36" height="36" alt=""><span>Notify<b>Hub</b></span></a>
+<nav class="nav" id="site-nav" aria-label="Main"><a href="../#features">Features</a><a href="../#how">How it works</a><a href="../#api">Your server</a><a href="../#faq">FAQ</a><a href="./" aria-current="page">Docs</a><a class="btn btn-ghost btn-sm" href="https://github.com/IG-onGit/NotifyHub" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg> GitHub</a></nav>
+<button type="button" class="burger" aria-controls="docs-nav" aria-expanded="false" aria-label="Open menu"><svg class="icon i-open" aria-hidden="true"><use href="#i-menu"/></svg><svg class="icon i-close" aria-hidden="true"><use href="#i-x"/></svg></button>
+</div>
+</header>
+<div class="container docs-layout">
+<aside class="sidebar" id="docs-nav" aria-label="Documentation sections"><div class="grp">Getting started</div><a href="#general" data-section="general">General</a><a href="#how-it-works" data-section="how-it-works">How it works</a><a href="#installation" data-section="installation">Installation</a><a href="#configuration" data-section="configuration">Configuration</a><div class="grp">Reference</div><a href="#api-contract" data-section="api-contract">API contract</a><a href="#sending" data-section="sending">Sending notifications</a><a href="#security" data-section="security">Security and permissions</a><a href="#structure" data-section="structure">Project structure</a><div class="grp">Project</div><a href="#requirements" data-section="requirements">System requirements</a><a href="#license" data-section="license">License</a><a href="#author" data-section="author">About the author</a><div class="grp mobile-only">Site</div><a class="mobile-only" href="../"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>&nbsp; Back to home</a><a class="mobile-only" href="https://github.com/IG-onGit/NotifyHub" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg>&nbsp; GitHub</a></aside>
+<main id="main">
+<article class="doc-section" id="general"><h1>General</h1>
+<p>NotifyHub is a native Android app, written in Kotlin with Jetpack Compose, that polls <strong>your own server</strong> for notifications and displays them as real Android system notifications. Each registered project gets its own icon, accent color and name, all configured on the device.</p>
+<p>It exists for developers who run their own backends and want alerts (deploys, errors, sign-ups, jobs finishing) on their phone without adopting Firebase or any other push service. The app only ever makes outbound requests to the server URLs you enter.</p>
+<h2>Why use it</h2>
+<ul>
+<li><strong>No third party.</strong> No Firebase, no push relay, no account. Nothing is sent anywhere except your servers.</li>
+<li><strong>Per-project identity.</strong> Name, icon (11 bundled) and color (12 presets) show up on the notification itself.</li>
+<li><strong>Simple contract.</strong> One <code>GET</code> endpoint that returns JSON.</li>
+<li><strong>Persistent.</strong> A foreground service keeps polling, and restarts after a reboot when sync is enabled.</li>
+<li><strong>History.</strong> Notifications are also kept in the app until you clear them, and pruned after 30 days.</li>
+</ul>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><div><p>New here? Read <a href="#how-it-works" data-goto="how-it-works">How it works</a>, then follow <a href="#installation" data-goto="installation">Installation</a>.</p></div></div>
+<div class="pager"><a class="btn btn-primary next" href="#how-it-works" data-goto="how-it-works">How it works <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="how-it-works"><h1>How it works</h1>
+<p>NotifyHub never receives pushes. It asks your server for anything new on a timer.</p>
+<ol>
+<li>You register each piece of software as a <strong>project</strong> in the app: name, project key, server base URL, optional token, icon and color.</li>
+<li>Your own services store notifications on your server, tagged with the same <code>projectKey</code>.</li>
+<li>A foreground service calls <code>GET /api/notifications?since=&lt;epochMillis&gt;</code> for each project every poll interval (20 s by default).</li>
+<li>New items, de-duplicated by <code>id</code>, are saved to the local history and posted as Android notifications styled with the project's icon and color.</li>
+</ol>
+<pre><code data-lang="text" data-title="data flow"> your service        your server                         NotifyHub (phone)
+ ------------        -----------                         -----------------
+ POST /api/      -&gt;  stores row with                     every N seconds, per project:
+ notifications       server id + timestamp               GET /api/notifications?since=T
+                                                         Authorization: Bearer &lt;token&gt;
+                     &lt;--------------------------------   200 { "notifications": [...] }
+                                                         dedupe by id -&gt; history -&gt; system
+                                                         notification (project icon + color)</code></pre>
+<p>Notifications are available both in the Android tray (clearable there) and in the app's own list, where you can clear them individually or all at once.</p>
+<div class="pager"><a class="btn btn-ghost prev" href="#general" data-goto="general"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> General</a><a class="btn btn-primary next" href="#installation" data-goto="installation">Installation <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="installation"><h1>Installation</h1>
+<p>There is no store listing. Pick one of the paths below.</p>
+<h2>Option 1: install the prebuilt APK</h2>
+<p>The repository contains <a href="https://github.com/IG-onGit/NotifyHub/raw/main/NotifyHub.apk" rel="noopener"><code>NotifyHub.apk</code></a>, a debug build produced by the repository's GitHub Actions workflow. Copy it to your phone and open it, allowing "install from this source" when Android asks. With USB debugging enabled you can also install it from a computer:</p>
+<pre><code data-lang="bash" data-title="install over USB">adb install -r NotifyHub.apk</code></pre>
+<h2>Option 2: run from Android Studio</h2>
+<ol>
+<li>Clone the repository and open the folder in <a href="https://developer.android.com/studio" rel="noopener">Android Studio</a>. Let Gradle sync (internet needed once).</li>
+<li>Enable <strong>Developer options</strong> and <strong>USB debugging</strong> on your phone (Settings, About phone, tap "Build number" 7 times).</li>
+<li>Select your phone as the target and click <strong>Run</strong>.</li>
+</ol>
+<pre><code data-lang="bash" data-title="clone">git clone https://github.com/IG-onGit/NotifyHub.git
+cd NotifyHub</code></pre>
+<h2>Option 3: build an APK</h2>
+<p>In Android Studio choose <strong>Build, Build App Bundle(s) / APK(s), Build APK(s)</strong>, then copy <code>app/build/outputs/apk/debug/app-debug.apk</code> to your phone. From the command line, the repository ships the Gradle wrapper properties (Gradle 8.7) but not the wrapper binaries, so generate them once with any local Gradle install:</p>
+<pre><code data-lang="bash" data-title="command-line build">gradle wrapper
+./gradlew assembleDebug</code></pre>
+<h2>First launch</h2>
+<ol>
+<li>Grant the notification permission when asked.</li>
+<li>Open <strong>Projects</strong> and register your first project. The project key must match what your server tags notifications with.</li>
+<li>Open <strong>Settings</strong> and switch <strong>Background sync</strong> on.</li>
+</ol>
+<div class="pager"><a class="btn btn-ghost prev" href="#how-it-works" data-goto="how-it-works"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> How it works</a><a class="btn btn-primary next" href="#configuration" data-goto="configuration">Configuration <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="configuration"><h1>Configuration</h1>
+<p>All configuration happens inside the app.</p>
+<h2>Per-project settings</h2>
+<p>Set on the <strong>Register project</strong> screen. Each project has its own server and token.</p>
+<div class="table-wrap"><table><thead><tr><th>Setting</th><th>Details</th><th>Default</th></tr></thead><tbody><tr><td>Project / software name</td><td>Display name. Replaces the app label in the notification header.</td><td>required</td></tr><tr><td>Project key</td><td>Must match the <code>projectKey</code> your server sends exactly. Filled in from the name (lowercase, dashes) until you edit it.</td><td>required</td></tr><tr><td>Server base URL</td><td>For example <code>https://your-server.example.com</code>. <code>/api/notifications</code> is appended; a trailing slash is fine.</td><td>empty (project is skipped)</td></tr><tr><td>API token</td><td>Sent as <code>Authorization: Bearer &lt;token&gt;</code> on every request. Stored encrypted.</td><td>optional</td></tr><tr><td>Icon</td><td>bell, rocket, cloud, server, code, warning, check, bolt, chart, shield, star.</td><td>bell</td></tr><tr><td>Notification color</td><td>One of 12 presets.</td><td>#6750A4</td></tr></tbody></table></div>
+<h2>Global settings</h2>
+<div class="table-wrap"><table><thead><tr><th>Setting</th><th>Details</th><th>Default</th></tr></thead><tbody><tr><td>Poll interval</td><td>Slider in the Settings screen, from 5 to 120 seconds.</td><td>20 s</td></tr><tr><td>Background sync</td><td>Starts or stops the foreground polling service.</td><td>off</td></tr><tr><td>Battery optimization</td><td>Shows whether NotifyHub is unrestricted and opens Android's request dialog if not.</td><td>n/a</td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><div><p>The Settings slider stops at 120 seconds. The polling service itself accepts values from 5 up to 3600 seconds, so a longer interval is only possible if the stored value is set another way.</p></div></div>
+<div class="pager"><a class="btn btn-ghost prev" href="#installation" data-goto="installation"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> Installation</a><a class="btn btn-primary next" href="#api-contract" data-goto="api-contract">API contract <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="api-contract"><h1>API contract</h1>
+<p>This is the only endpoint the app calls. Implement it on every server you register.</p>
+<h2>Request</h2>
+<pre><code data-lang="http" data-title="request">GET {base}/api/notifications?since=1739203200000
+Authorization: Bearer &lt;token&gt;</code></pre>
+<div class="table-wrap"><table><thead><tr><th>Part</th><th>Value</th></tr></thead><tbody><tr><td>Query <code>since</code></td><td>Epoch <strong>milliseconds</strong>. Return only items with <code>timestamp &gt; since</code> (exclusive). The app sends the newest timestamp it has stored for that project, or <code>0</code> on first run or after a full clear.</td></tr><tr><td>Header <code>Authorization</code></td><td><code>Bearer &lt;token&gt;</code>, sent only if you set a token for the project. Validate it and answer <code>401</code> if wrong.</td></tr></tbody></table></div>
+<h2>Response</h2>
+<p><code>200 OK</code> with <code>Content-Type: application/json</code>:</p>
+<pre><code data-lang="json" data-title="200 OK">{
+  "notifications": [
+    {
+      "id": "a-unique-stable-id",
+      "projectKey": "my-web-app",
+      "title": "Deploy finished",
+      "message": "v2.4.1 deployed to production in 38s",
+      "timestamp": 1739203200000
+    }
+  ]
+}</code></pre>
+<p>When nothing is new, return <code>{"notifications": []}</code> with <code>200</code>. That is the normal answer on most polls; do not return an error or <code>204</code>.</p>
+<h2>Field rules</h2>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Rule</th></tr></thead><tbody><tr><td><code>id</code></td><td>string</td><td>Unique and <strong>stable</strong>. The app de-duplicates on it. Never reuse an id, never change it on retry.</td></tr><tr><td><code>projectKey</code></td><td>string</td><td>Must exactly match the key registered in the app. The app polls each project separately and keeps the items tagged with that project's key.</td></tr><tr><td><code>title</code></td><td>string</td><td>Notification title.</td></tr><tr><td><code>message</code></td><td>string</td><td>Notification body.</td></tr><tr><td><code>timestamp</code></td><td>number</td><td>Epoch milliseconds. Newer notifications must have a strictly larger value.</td></tr></tbody></table></div>
+<p>All five fields are required in every item. Return items oldest to newest.</p>
+<h2>Client behaviour</h2>
+<ul>
+<li>Connect and read timeouts are 15 seconds each.</li>
+<li>A failed poll is logged and retried on the next cycle; the app does not show an error notification.</li>
+<li>Local history older than 30 days is pruned after each cycle.</li>
+<li>CORS is not needed: the client is native.</li>
+</ul>
+<div class="pager"><a class="btn btn-ghost prev" href="#configuration" data-goto="configuration"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> Configuration</a><a class="btn btn-primary next" href="#sending" data-goto="sending">Sending notifications <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="sending"><h1>Sending notifications</h1>
+<p>The app never pushes to your server, so how notifications get into your storage is up to you. A minimal pattern is a <code>POST /api/notifications</code> endpoint that your services call and that appends to a table the <code>GET</code> reads from.</p>
+<h2>POST /api/notifications</h2>
+<div class="table-wrap"><table><thead><tr><th>Part</th><th>Value</th></tr></thead><tbody><tr><td>Header <code>Content-Type</code></td><td><code>application/json</code></td></tr><tr><td>Header <code>Authorization</code></td><td><code>Bearer &lt;token&gt;</code>. The same token, or a separate write token.</td></tr><tr><td>Body</td><td><code>projectKey</code>, <code>title</code>, <code>message</code> (strings, required). The server assigns <code>id</code> and <code>timestamp</code>.</td></tr></tbody></table></div>
+<pre><code data-lang="bash" data-title="send a notification">curl -X POST "https://your-server.example.com/api/notifications" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{"projectKey":"my-web-app","title":"Deploy finished","message":"v2.4.1 deployed to production in 38s"}'</code></pre>
+<p>Suggested answers: <code>201 Created</code> with the stored item, <code>400</code> for missing fields, <code>401</code> for a bad token.</p>
+<h2>Implementation notes</h2>
+<ul>
+<li><strong>Server-assigned, increasing timestamps.</strong> The app resumes from the highest timestamp it has stored. If two items share a millisecond or one is written late with an older timestamp, it can be missed. Stamp at insert time and bump by 1 ms on collision.</li>
+<li><strong><code>since</code> is exclusive.</strong> Use <code>timestamp &gt; since</code>.</li>
+<li><strong>Retention.</strong> Keep enough history to survive the phone being offline, and make <code>since=0</code> return something sensible.</li>
+<li><strong>Keep the GET cheap.</strong> It runs every poll interval; index the timestamp column.</li>
+</ul>
+<h2>Quick end-to-end test</h2>
+<pre><code data-lang="bash" data-title="test"># 1. Push a test notification
+curl -X POST "https://your-server.example.com/api/notifications" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{"projectKey":"test","title":"Hello","message":"It works"}'
+
+# 2. Confirm the app will see it
+curl "https://your-server.example.com/api/notifications?since=0" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# 3. Confirm auth is enforced (expect 401)
+curl -i "https://your-server.example.com/api/notifications?since=0" \
+  -H "Authorization: Bearer WRONG_TOKEN"
+</code></pre>
+<p>Then in the app: register a project with key <code>test</code>, your base URL and token, and enable <strong>Background sync</strong>. The notification should appear within one poll interval. The same guide is in <a href="https://github.com/IG-onGit/NotifyHub/blob/main/NotifyHub.md" rel="noopener">NotifyHub.md</a> in the repository.</p>
+<div class="pager"><a class="btn btn-ghost prev" href="#api-contract" data-goto="api-contract"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> API contract</a><a class="btn btn-primary next" href="#security" data-goto="security">Security and permissions <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="security"><h1>Security and permissions</h1>
+<p>NotifyHub is designed so that your data only travels between your phone and your servers.</p>
+<ul>
+<li><strong>Use HTTPS</strong> for every server base URL. The token is sent as a bearer header on every request, so plain HTTP would expose it on the network.</li>
+<li><strong>Encrypted tokens.</strong> Tokens are stored with <code>EncryptedSharedPreferences</code> (AES-256 keys and values) and the preferences file is excluded from Android cloud backup and device transfer. Deleting a project also removes its token.</li>
+<li><strong>No third party.</strong> The only network destinations are the base URLs you register.</li>
+<li><strong>Sideloaded.</strong> There is no store distribution; you install the APK yourself.</li>
+</ul>
+<h2>Permissions</h2>
+<div class="table-wrap"><table><thead><tr><th>Permission</th><th>Why</th></tr></thead><tbody><tr><td><code>INTERNET</code>, <code>ACCESS_NETWORK_STATE</code></td><td>Reach your server.</td></tr><tr><td><code>POST_NOTIFICATIONS</code></td><td>Show notifications (runtime prompt on Android 13 and newer).</td></tr><tr><td><code>FOREGROUND_SERVICE</code>, <code>FOREGROUND_SERVICE_DATA_SYNC</code></td><td>Run the polling service.</td></tr><tr><td><code>WAKE_LOCK</code></td><td>Keep the CPU awake while the screen is off so polling continues.</td></tr><tr><td><code>RECEIVE_BOOT_COMPLETED</code></td><td>Restart sync after a reboot.</td></tr><tr><td><code>REQUEST_IGNORE_BATTERY_OPTIMIZATIONS</code></td><td>Let you allow unrestricted background activity.</td></tr><tr><td><code>SUBSTITUTE_NOTIFICATION_APP_NAME</code></td><td>Show the project name instead of the app name in the notification header.</td></tr></tbody></table></div>
+<div class="pager"><a class="btn btn-ghost prev" href="#sending" data-goto="sending"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> Sending notifications</a><a class="btn btn-primary next" href="#structure" data-goto="structure">Project structure <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="structure"><h1>Project structure</h1>
+<p>The Android module lives in <code>app/</code>. Source is under <code>app/src/main/java/com/notifyhub/app/</code>.</p>
+<pre><code data-lang="text" data-title="app/src/main/java/com/notifyhub/app/">MainActivity.kt        Entry point, notification permission, nav host
+NotifyHubApp.kt        Application class, wires DB + settings
+data/                  Room entities/DAOs, repository, encrypted settings
+network/               Retrofit API service + DTOs
+service/               Foreground polling service, boot receiver
+notification/          Icon catalog, Android notification building
+ui/                    Compose screens (Notifications, Projects,
+                       Add/Edit Project, Settings), navigation, theme</code></pre>
+<h2>Stack</h2>
+<div class="table-wrap"><table><thead><tr><th>Concern</th><th>Library</th></tr></thead><tbody><tr><td>UI</td><td>Jetpack Compose, Material 3, Navigation Compose</td></tr><tr><td>Storage</td><td>Room; EncryptedSharedPreferences (androidx.security-crypto)</td></tr><tr><td>Networking</td><td>Retrofit, OkHttp, Moshi</td></tr><tr><td>Async</td><td>Kotlin coroutines; WorkManager is included as a boot-time safety net</td></tr></tbody></table></div>
+<div class="pager"><a class="btn btn-ghost prev" href="#security" data-goto="security"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> Security and permissions</a><a class="btn btn-primary next" href="#requirements" data-goto="requirements">System requirements <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="requirements"><h1>System requirements</h1>
+<h2>Running the app</h2>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Requirement</th></tr></thead><tbody><tr><td>Android</td><td>8.0 (API 26) or newer</td></tr><tr><td>Permission</td><td>Notifications (you are asked on Android 13 and newer)</td></tr><tr><td>Network</td><td>Internet access to the server you register</td></tr><tr><td>Recommended</td><td>Battery optimization set to unrestricted for reliable background sync</td></tr></tbody></table></div>
+<h2>On your server</h2>
+<ul>
+<li>A <code>GET /api/notifications?since=</code> endpoint that returns the JSON described in the <a href="#api-contract" data-goto="api-contract">API contract</a>.</li>
+<li>HTTPS, and token validation if you use a token.</li>
+<li>Optionally a <code>POST</code> endpoint so your services can add notifications.</li>
+</ul>
+<h2>Building from source</h2>
+<ul>
+<li>Android Studio, with internet access on first sync to download dependencies.</li>
+<li>JDK 17 and Gradle 8.7 (Android Gradle Plugin 8.5.2, Kotlin 1.9.24).</li>
+<li>Android SDK platform 34 (<code>compileSdk</code> and <code>targetSdk</code> 34, <code>minSdk</code> 26).</li>
+</ul>
+<div class="pager"><a class="btn btn-ghost prev" href="#structure" data-goto="structure"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> Project structure</a><a class="btn btn-primary next" href="#license" data-goto="license">License <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="license"><h1>License</h1>
+<p>NotifyHub is released under the MIT License. In plain English: you may use, copy, modify, merge, publish, distribute, sublicense and sell it, including commercially, as long as you keep the copyright and license notice. It comes with no warranty.</p>
+<div class="license-box" tabindex="0" role="region" aria-label="Full MIT license text">MIT License
+
+Copyright (c) 2026 Irakli Gzirishvili
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</div>
+<p><a class="btn btn-ghost btn-sm" href="https://github.com/IG-onGit/NotifyHub/blob/main/LICENSE" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg> View LICENSE on GitHub</a></p>
+<div class="pager"><a class="btn btn-ghost prev" href="#requirements" data-goto="requirements"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> System requirements</a><a class="btn btn-primary next" href="#author" data-goto="author">About the author <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></article>
+<article class="doc-section" id="author"><h1>About the author</h1>
+<div class="author-card">
+<img class="author-photo" src="../assets/Irakli%20Gzirishvili.png" width="300" height="300" alt="Irakli Gzirishvili" loading="lazy">
+<div>
+<h2>Irakli Gzirishvili</h2>
+<p>Full-Stack Software Engineer, MIT OSS provider, AI Integration manager, cloud engineer and DevOps engineer from Georgia.</p>
+</div>
+</div>
+<div class="link-row">
+<a class="btn btn-ghost" href="https://github.com/IG-onGit" rel="me noopener"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg> github.com/IG-onGit</a>
+<a class="btn btn-ghost" href="https://www.linkedin.com/in/ig-link" rel="me noopener"><svg class="icon" aria-hidden="true"><use href="#i-linkedin"/></svg> LinkedIn</a>
+<a class="btn btn-ghost" href="https://x.com/IG_onX" rel="me noopener"><svg class="icon" aria-hidden="true"><use href="#i-twitter-x"/></svg> X</a>
+<a class="btn btn-ghost" href="https://www.linkedin.com/newsletters/creatron-7275978973124132864" rel="me noopener"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg> CreaTron newsletter</a>
+</div>
+<div class="pager"><a class="btn btn-ghost prev" href="#license" data-goto="license"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> License</a></div></article>
+</main>
+</div>
+<footer class="site-footer">
+<div class="container foot-in">
+<p style="margin:0">Copyright (c) 2026 Irakli Gzirishvili. Released under the <a href="./#license" data-section="license">MIT License</a>.</p>
+<nav aria-label="Footer">
+<a href="./">Documentation</a>
+<a href="./#requirements" data-section="requirements">Requirements</a>
+<a href="./#license" data-section="license">License</a>
+<a href="https://github.com/IG-onGit/NotifyHub" rel="noopener">GitHub</a>
+</nav>
+</div>
+</footer>
+<script src="../assets/main.js" defer></script>
+</body>
+</html>
