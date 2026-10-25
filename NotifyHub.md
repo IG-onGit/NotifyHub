@@ -109,7 +109,7 @@ Suggested errors: `400` for missing/invalid fields, `401` for a bad token.
 - **`since` is exclusive.** Use `timestamp > since`, not `>=`.
 - **Order.** Return notifications oldest → newest.
 - **Retention.** The app prunes its own local history after 30 days. The server only needs to keep enough history to survive the app being offline (and must still serve `since=0` sensibly).
-- **Poll rate.** Default is ~20 s; the app clamps the user-configured interval to 5 s–3600 s. Keep the GET cheap (index on `timestamp`).
+- **Poll rate.** Default is ~20 s; the app clamps the user-configured interval to 5 s-3600 s. Keep the GET cheap (index on `timestamp`).
 - **Timeouts.** The app uses 15 s connect and 15 s read timeouts. Failed polls are silently retried on the next cycle.
 - **Base URL.** The user enters the base URL (and optional token) per project on the project registration page (e.g. `https://your-server.example.com`); `/api/notifications` is appended. A trailing slash is fine.
 - **CORS** is not needed (native client).

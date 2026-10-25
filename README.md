@@ -13,7 +13,7 @@ build it once and sideload the APK onto your phone.
 2. Your own backend scripts/services push notifications into **your**
    server's own storage, tagged with that same `projectKey`.
 3. The app runs a foreground service that polls your server's API on an
-   interval (default 20s, configurable 5–120s) and posts any new ones as
+   interval (default 20s, configurable 5-120s) and posts any new ones as
    Android notifications, styled with that project's icon/color.
 4. Notifications live both as real system notifications (clearable from the
    tray) and in the app's own history list (clear individually or all).
